@@ -1,0 +1,16 @@
+# Space-Survivor (Unity game engine)
+
+This game was created from an "empty" project template using the Unity 6.3 LTS game engine within the Windows 64 environment. 
+The purpose of the game was to become familiar with the Unity game engine. 
+
+<b>Special Note:</b> The game's current version doesn't offer an exit and requires a forced quit (alt + tab, right mouse click the application, select 'Close').
+
+Use 'A' to move left.<br>
+Use 'D' to move right.<br>
+Use 'Spacebar' to burst forward.<br>
+Use 'W' to shoot laser (limited use).<br>
+<br>
+<b>Goal:</b> Avoid Asteroids and falling off the screen. You have 3 lives.<br>
+<b>Extras:</b> Staying alive earns points. Powerups resupply ammunition, game ramps up the longer you survive. 
+
+Windows 64-bit Compile: <a href="https://drive.usercontent.google.com/download?id=1s2UacOT9QApbvd-gZOpGAjTB50Ondnjm&export=download")Download</a>
