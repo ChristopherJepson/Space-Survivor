@@ -16,7 +16,12 @@ public class PlayerController : MonoBehaviour
     public GameObject projectilePrefab; // NEW: The Laser Prefab
     public Vector3 projectileOffset = new Vector3(0, 1f, 0);
     public TextMeshProUGUI ammoText;
-    
+    public AudioSource backgroundMusic;
+    public AudioClip gameOverSound;
+    private AudioSource playerAudio;
+    public AudioClip readySound; 
+    public AudioClip beginSound;
+    public float tiltAngle = 40f;
 
     // --- SETTINGS ---
     public float moveSpeed = 5f;
@@ -49,6 +54,8 @@ public class PlayerController : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
 
+        playerAudio = GetComponent<AudioSource>();
+
         UpdateLivesUI();
         UpdateScoreUI(); // Initialize score text at 0
         UpdateAmmoUI();
@@ -57,12 +64,22 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator StartGameDelay()
     {
+        if (playerAudio != null && readySound != null)
+        {
+            playerAudio.PlayOneShot(readySound);
+        }
+
         Debug.Log("Get Ready...");
         // Ensure spawner is paused at start
         if (spawnerScript != null) spawnerScript.isSpawningActive = false;
 
         yield return new WaitForSeconds(3f);
         
+        if (playerAudio != null && beginSound != null)
+        {
+            playerAudio.PlayOneShot(beginSound);
+        }
+
         Debug.Log("GO!");
         isGameActive = true;
         rb.gravityScale = 1;
@@ -108,8 +125,19 @@ public class PlayerController : MonoBehaviour
                 UpdateScoreUI();
             }
 
+            // --- MOVEMENT & TILT ---
             float moveInput = Input.GetAxisRaw("Horizontal");
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+
+            // 1. Calculate the rotation
+            // Left (-1) becomes -40. Right (1) becomes 40. Center (0) becomes 0.
+            float targetZ = -moveInput * tiltAngle; 
+
+            // 2. Create the target rotation
+            Quaternion targetRotation = Quaternion.Euler(0, 0, targetZ);
+
+            // 3. Smoothly rotate towards it (Slerp makes it look fluid rather than jerky)
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
             Vector3 currentPos = transform.position;
             currentPos.x = Mathf.Clamp(currentPos.x, -xBoundary, xBoundary);
@@ -187,8 +215,15 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0; // Float in place
         transform.position = startPosition; // Reset position
 
+        transform.rotation = Quaternion.identity;
+
         // Pause the Spawner (stops rocks and ramping)
         if (spawnerScript != null) spawnerScript.isSpawningActive = false;
+
+        if (playerAudio != null && readySound != null)
+        {
+            playerAudio.PlayOneShot(readySound);
+        }
 
         // 2. THE BLINKING LOOP (3 Seconds)
         // We blink 10 times quickly
@@ -206,6 +241,11 @@ public class PlayerController : MonoBehaviour
         // Ensure player is visible at the end
         spriteRenderer.enabled = true;
 
+        if (playerAudio != null && beginSound != null)
+        {
+            playerAudio.PlayOneShot(beginSound);
+        }
+
         // 3. RESUME EVERYTHING
         isInvulnerable = false;
         isGameActive = true;
@@ -220,6 +260,15 @@ public class PlayerController : MonoBehaviour
         Debug.Log("GAME OVER");
         isGameOver = true;
         if (gameOverUI != null) gameOverUI.SetActive(true);
+        
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.Stop();
+        }
+        if (playerAudio != null && gameOverSound != null)
+        {
+            playerAudio.PlayOneShot(gameOverSound, 1.0f); 
+        }
         Time.timeScale = 0;
     }
 
