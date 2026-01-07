@@ -109,6 +109,7 @@ MonoBehaviour:
   speedVariance: 1
   useGlobalSpeed: 0
   fixedSpeed: 3
+  maxRotationSpeed: 200
   fragmentPrefab: {fileID: 0}
 --- !u!58 &4090982560139313836
 CircleCollider2D:

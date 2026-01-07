@@ -308,4 +308,10 @@ public class PlayerController : MonoBehaviour
         UpdateAmmoUI();
         Debug.Log("Ammo Refilled!");
     }
+    
+    public void AddScore(int amount)
+    {
+        score += amount;
+        UpdateScoreUI(); // Refresh the text immediately
+    }
 }

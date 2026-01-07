@@ -10,12 +10,27 @@ public class MoveDown : MonoBehaviour
     public bool useGlobalSpeed = true; // Default is TRUE (for Rocks)
     public float fixedSpeed = 3f;      // Default speed if NOT using Global
 
+    private float rotationSpeed; 
+    // This controls the "Base" speed. Higher = Faster spinning.
+    public float maxRotationSpeed = 200f;
+
     // NEW: Reference to the fragment to spawn
     public GameObject fragmentPrefab; 
 
     void Start()
     {
         mySpeedOffset = Random.Range(-speedVariance, speedVariance);
+
+        float randomBaseSpeed = Random.Range(-maxRotationSpeed, maxRotationSpeed);
+        // 2. Adjust by Size (Larger scale = Slower spin)
+        // We use the X scale as our "size" reference.
+        float size = transform.localScale.x;
+        
+        // Safety check to prevent dividing by zero
+        if (size < 0.1f) size = 0.1f; 
+
+        // Apply the physics formula
+        rotationSpeed = randomBaseSpeed / size;
     }
 
     void Update()
@@ -35,7 +50,10 @@ public class MoveDown : MonoBehaviour
 
         if (speedToUse < 0.5f) speedToUse = 0.5f;
 
-        transform.Translate(Vector3.down * speedToUse * Time.deltaTime);
+        transform.Translate(Vector3.down * speedToUse * Time.deltaTime, Space.World);
+
+        // We rotate around the Z axis (0, 0, Z)
+        transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
 
         if (transform.position.y < destroyHeight)
         {
@@ -55,8 +73,6 @@ public class MoveDown : MonoBehaviour
             if (fragmentPrefab != null)
             {
                 GameObject piece = Instantiate(fragmentPrefab, transform.position, Quaternion.identity);
-
-                // 3. Match the sprite (Optional: makes debris look like the parent rock)
                 piece.GetComponent<SpriteRenderer>().sprite = GetComponent<SpriteRenderer>().sprite;
 
                 // 4. Apply Explosion Force

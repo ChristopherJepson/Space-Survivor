@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour
     public float spawnRateDecrease = 0.05f; // How much faster it gets every second (The Ramp)
     private float nextPowerupTime = 0f;
     public float minSpawnRate = 0.5f;     // The hard limit (fastest possible speed)
+    public GameObject alienPrefab;
     // ---------------------------
     public float spawnY = 15f; 
     public float minX = -12f;
@@ -21,6 +22,7 @@ public class Spawner : MonoBehaviour
     // --- NEW DIFFICULTY SETTINGS ---
     public float startSpeed = 5f;        // How fast rocks fall at the start
     public float speedIncrease = 0.1f;   // How much faster they get every second
+    private float nextAlienTime = 0f;
     
     // "static" means this variable belongs to the CLASS, not the object.
     // Every script in the game can read "Spawner.globalSpeed"
@@ -37,6 +39,7 @@ public class Spawner : MonoBehaviour
         // Push first spawn back 3 seconds
         nextSpawnTime = Time.time + 3f;
         nextPowerupTime = Time.time + 10f;
+        nextAlienTime = Time.time + 30f;
     }
 
     void Update()
@@ -66,6 +69,11 @@ public class Spawner : MonoBehaviour
             SpawnPowerup();
             // Schedule next one randomly between 15 and 30 seconds
             nextPowerupTime = Time.time + Random.Range(15f, 30f);
+        }
+        if (Time.time > nextAlienTime)
+        {
+            SpawnAlien();
+            nextAlienTime = Time.time + 30f; // Reset for next 30s
         }
     }
 
@@ -103,6 +111,27 @@ public class Spawner : MonoBehaviour
             
             // Spawn it!
             Instantiate(powerupPrefab, spawnPos, Quaternion.identity);
+        }
+    }
+    void SpawnAlien()
+    {
+        if (alienPrefab != null)
+        {
+            // 1. Randomly decide: Left (-25) or Right (25)
+            float spawnX;
+            // Random.value returns a number between 0.0 and 1.0
+            if (Random.value > 0.5f) 
+                spawnX = -25f; // Left Side
+            else 
+                spawnX = 25f;  // Right Side
+
+            // 2. Pick a random height (Upper half of screen)
+            float spawnY = Random.Range(4f, 8f); 
+
+            Vector2 spawnPos = new Vector2(spawnX, spawnY);
+            
+            // 3. Spawn
+            Instantiate(alienPrefab, spawnPos, Quaternion.identity);
         }
     }
 }

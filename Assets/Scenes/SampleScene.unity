@@ -310,6 +310,7 @@ MonoBehaviour:
   spawnRateVariance: 0.8
   spawnRateDecrease: 0.02
   minSpawnRate: 0.5
+  alienPrefab: {fileID: 2272509378671722450, guid: 20f4b16ec94a85448986c8d3e1afee45, type: 3}
   spawnY: 15
   minX: -19
   maxX: 19
@@ -6502,6 +6503,7 @@ MonoBehaviour:
   gameOverSound: {fileID: 8300000, guid: 2507586e786fb6640b2584f5fcfcb8e2, type: 3}
   readySound: {fileID: 8300000, guid: adda5650ac83f274f80e5713db5c37f2, type: 3}
   beginSound: {fileID: 8300000, guid: 4b124cab8dea7374182c4ef1b77483b2, type: 3}
+  tiltAngle: 40
   moveSpeed: 5
   jumpForce: 10
   bottomBoundary: -11
