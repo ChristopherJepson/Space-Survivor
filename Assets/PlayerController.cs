@@ -314,4 +314,10 @@ public class PlayerController : MonoBehaviour
         score += amount;
         UpdateScoreUI(); // Refresh the text immediately
     }
+
+    public void LoadMenu()
+    {
+        Time.timeScale = 1; // IMPORTANT: Unpause the game before leaving!
+        SceneManager.LoadScene("MainMenu");
+    }
 }
