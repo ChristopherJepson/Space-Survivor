@@ -13,4 +13,5 @@ Use 'W' to shoot laser (limited use).<br>
 <b>Goal:</b> Avoid Asteroids and falling off the screen. You have 3 lives.<br>
 <b>Extras:</b> Staying alive earns points. Powerups resupply ammunition, game ramps up the longer you survive. 
 
-Windows 64-bit Compile: <a href="https://drive.usercontent.google.com/download?id=1ig-Y7nGJCS2wmN_4DZxJdSIpHrhJwlFE&export=download">Download</a>
+Windows 64-bit Ver. 0.0.9 Compile: <a href="https://drive.usercontent.google.com/download?id=1s9yqBQJoNKlSF0_lwEAS6XBv7jQQc7XA&export=download">Download</a><br>
+Windows 64-bit Ver. 0.0.5 Compile: <a href="https://drive.usercontent.google.com/download?id=1ig-Y7nGJCS2wmN_4DZxJdSIpHrhJwlFE&export=download">Download</a><br>
