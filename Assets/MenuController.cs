@@ -6,8 +6,7 @@ public class MenuController : MonoBehaviour
     // Called by the Play Button
     public void PlayGame()
     {
-        // Loads the next scene in the queue (The Game Scene)
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("Game");
     }
 
     // Called by the Quit Button

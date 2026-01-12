@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip readySound; 
     public AudioClip beginSound;
     public float tiltAngle = 40f;
+    public HighScoreInput highScoreScript;
 
     // --- SETTINGS ---
     public float moveSpeed = 5f;
@@ -90,6 +91,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (highScoreScript != null && highScoreScript.highScorePanel.activeSelf)
+        {
+            return; // Do nothing! Wait for them to click Submit.
+        }
+
         // 1. GAME OVER CHECK
         if (isGameOver)
         {
@@ -259,6 +265,18 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("GAME OVER");
         isGameOver = true;
+
+        if (highScoreScript != null && ScoreManager.IsHighScore(score))
+        {
+            // If it is a high score, let the HS script handle the UI
+            highScoreScript.CheckHighScore(score);
+        }
+        else
+        {
+            // Standard Game Over (Not a high score)
+            if (gameOverUI != null) gameOverUI.SetActive(true);
+        }
+
         if (gameOverUI != null) gameOverUI.SetActive(true);
         
         if (backgroundMusic != null)
@@ -319,5 +337,10 @@ public class PlayerController : MonoBehaviour
     {
         Time.timeScale = 1; // IMPORTANT: Unpause the game before leaving!
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 }
