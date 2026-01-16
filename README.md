@@ -4,8 +4,6 @@ This game was created from an "empty" project template using the Unity 6.3 LTS g
 The purpose of the game was to become familiar with the Unity game engine.<br>
 <br>
 <img src="https://i.ibb.co/FLD6mFdk/Space-Survivor-ss01-0-0-16.png" alt="Space Survivor ss01 0 0 16" border="0">
-<br>
-<img src="https://i.ibb.co/WNYmjV5t/Space-Survivor-ss02-0-0-16.png" alt="Space Survivor ss02 0 0 16" border="0">
 <b>Note:</b><br>
 Currently, the game is optimize only for 1920x1080 video resolution. Any resolution under this may result in UI/UX issues. This will be fixed eventually.<br>
 <br>
