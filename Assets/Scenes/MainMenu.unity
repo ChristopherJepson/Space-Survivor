@@ -6929,6 +6929,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: asteroidY
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: enemyYMax
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: enemyYMin
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: enemySpawnRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: asteroidSpawnRate
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: asteroidPrefabs.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125344690009243729, guid: 0df8d6b143c50f64c89401442a9ca053, type: 3}
+      propertyPath: 'asteroidPrefabs.Array.data[3]'
+      value: 
+      objectReference: {fileID: 6857829962148448994, guid: 0c3a835f93297fd47a1ebaa2757c8c6a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
