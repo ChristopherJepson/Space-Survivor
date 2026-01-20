@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+        
         startPosition = transform.position;
         rb.gravityScale = 0;
         

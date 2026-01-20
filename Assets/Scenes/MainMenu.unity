@@ -402,7 +402,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 452029972}
-  - component: {fileID: 452029971}
+  - component: {fileID: 452029973}
   m_Layer: 0
   m_Name: BackgroundSpawner
   m_TagString: Untagged
@@ -410,31 +410,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &452029971
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 452029970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3ea1352df7ce404ab9ef8965a1271b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuBackgroundSpawner
-  asteroidPrefabs:
-  - {fileID: 5013179376463336935, guid: 4f5f576d85e3e764a8fc252438d19b88, type: 3}
-  - {fileID: 6789306899406636147, guid: 24c107c6332664048ab563573a5c40d3, type: 3}
-  - {fileID: 840107241323538387, guid: a17d2401c3a27d44dacb534ce8c7f77b, type: 3}
-  - {fileID: 6857829962148448994, guid: 0c3a835f93297fd47a1ebaa2757c8c6a, type: 3}
-  enemyPrefab: {fileID: 2272509378671722450, guid: 20f4b16ec94a85448986c8d3e1afee45, type: 3}
-  enemySpawnRate: 5
-  asteroidSpawnRate: 3
-  asteroidY: 12
-  asteroidXRange: 18
-  enemyX: 18
-  enemyYMin: -9
-  enemyYMax: 4
 --- !u!4 &452029972
 Transform:
   m_ObjectHideFlags: 0
@@ -450,6 +425,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &452029973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452029970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ea1352df7ce404ab9ef8965a1271b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuBackgroundSpawner
+  asteroidPrefabs:
+  - {fileID: 5013179376463336935, guid: 4f5f576d85e3e764a8fc252438d19b88, type: 3}
+  - {fileID: 6789306899406636147, guid: 24c107c6332664048ab563573a5c40d3, type: 3}
+  - {fileID: 840107241323538387, guid: a17d2401c3a27d44dacb534ce8c7f77b, type: 3}
+  enemyPrefab: {fileID: 2272509378671722450, guid: 20f4b16ec94a85448986c8d3e1afee45, type: 3}
+  enemySpawnRate: 5
+  asteroidSpawnRate: 1
+  asteroidY: 8
+  asteroidXRange: 8
+  enemyX: 10
+  enemyYMin: -3
+  enemyYMax: 4
 --- !u!1 &471435435
 GameObject:
   m_ObjectHideFlags: 0
@@ -5355,11 +5354,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.16862746, g: 0.16862746, b: 0.16862746, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.21568628, g: 0.07058824, b: 0.07058824, a: 1}
     m_SelectedColor: {r: 0.16862746, g: 0.16862746, b: 0.16862746, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5373,11 +5372,23 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 564387400}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1628516145}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
+        m_MethodName: OpenSetup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &564387400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5391,7 +5402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5480,7 +5491,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.16862746, g: 0.16862746, b: 0.16862746, a: 1}
     m_PressedColor: {r: 0.21568628, g: 0.0720897, b: 0.0720897, a: 1}
     m_SelectedColor: {r: 0.16862746, g: 0.16862746, b: 0.16862746, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5650,6 +5661,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1047715652}
   - component: {fileID: 1047715651}
+  - component: {fileID: 1047715653}
   m_Layer: 0
   m_Name: MenuMusic
   m_TagString: Untagged
@@ -5666,7 +5678,7 @@ AudioSource:
   m_GameObject: {fileID: 1047715650}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -907460355931571803, guid: 43e9c651a6d9af5488d878c33311e6b2, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 9f608ddcdb860c94db6ae74bd394e2f7, type: 3}
   m_PlayOnAwake: 1
@@ -5769,6 +5781,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1047715653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047715650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 167377a934cec8e4fae4524190018ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicManager
 --- !u!1 &1072371810
 GameObject:
   m_ObjectHideFlags: 0
@@ -6412,8 +6436,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280492906
-  m_fontColor: {r: 0.41509432, g: 0.13901745, b: 0.13901745, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

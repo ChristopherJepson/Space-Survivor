@@ -3,58 +3,61 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     public GameObject[] platformPrefabs;
- // --- NEW SPAWN SETTINGS ---
+    [Header("Spawn Settings")]
     public GameObject powerupPrefab;
-    public float spawnRate = 1.5f;        // The "Mean" time between spawns
+    public float spawnRate = 1.5f;        
     public bool isSpawningActive = false;
-    public float spawnRateVariance = 0.5f; // Random fluctuation (e.g., +/- 0.5s)
-    public float spawnRateDecrease = 0.05f; // How much faster it gets every second (The Ramp)
+    public float spawnRateVariance = 0.5f; 
+    public float spawnRateDecrease = 0.05f; 
     private float nextPowerupTime = 0f;
-    public float minSpawnRate = 0.5f;     // The hard limit (fastest possible speed)
+    public float minSpawnRate = 0.5f;     
     public GameObject alienPrefab;
-    // ---------------------------
+
+    [Header("Dimensions")]
     public float spawnY = 15f; 
     public float minX = -12f;
     public float maxX = 12f;
     public float minSize = 0.8f;
     public float maxSize = 1.5f;
 
-    // --- NEW DIFFICULTY SETTINGS ---
-    public float startSpeed = 5f;        // How fast rocks fall at the start
-    public float speedIncrease = 0.1f;   // How much faster they get every second
+    [Header("Difficulty")]
+    public float startSpeed = 5f;        
+    public float speedIncrease = 0.1f;   
     private float nextAlienTime = 0f;
     
-    // "static" means this variable belongs to the CLASS, not the object.
-    // Every script in the game can read "Spawner.globalSpeed"
+    // Global variable for other scripts to read
     public static float globalSpeed; 
-    // -------------------------------
 
     private float nextSpawnTime = 0f;
 
     void Start()
     {
-        // RESET the speed when the game starts (important for restarts!)
         globalSpeed = startSpeed;
 
         // Push first spawn back 3 seconds
         nextSpawnTime = Time.time + 3f;
         nextPowerupTime = Time.time + 10f;
-        nextAlienTime = Time.time + 30f;
+        
+        // --- DIFFICULTY UPDATE ---
+        // Apply spawn multiplier to the first Alien timer too
+        // (Base 30 seconds / Multiplier)
+        nextAlienTime = Time.time + (30f / GameConfiguration.SpawnRateMultiplier);
     }
 
     void Update()
     {
         if (!isSpawningActive) return;
 
-        // 1. Ramp up the speed over time
-        // We add a tiny amount to the speed every single frame
-        globalSpeed += speedIncrease * Time.deltaTime;
+        // --- DIFFICULTY UPDATE ---
+        // 1. Apply Ramping Slider
+        // We multiply the "Increase" by the slider (0.5 to 2.0)
+        // If slider is 2.0, speed increases twice as fast.
+        globalSpeed += (speedIncrease * GameConfiguration.RampingSpeed) * Time.deltaTime;
 
-        // 2. Ramp up the SPAWN RATE (New code)
-        // We SUBTRACT because smaller numbers = faster spawning
+        // 2. Ramp up Spawn Rate (Make it faster over time)
         if (spawnRate > minSpawnRate)
         {
-            spawnRate -= spawnRateDecrease * Time.deltaTime;
+            spawnRate -= (spawnRateDecrease * GameConfiguration.RampingSpeed) * Time.deltaTime;
         }
 
         // 3. Check Spawn Timer
@@ -67,39 +70,52 @@ public class Spawner : MonoBehaviour
         if (Time.time > nextPowerupTime)
         {
             SpawnPowerup();
-            // Schedule next one randomly between 15 and 30 seconds
             nextPowerupTime = Time.time + Random.Range(15f, 30f);
         }
+
+        // 4. Check Alien Timer
         if (Time.time > nextAlienTime)
         {
             SpawnAlien();
-            nextAlienTime = Time.time + 30f; // Reset for next 30s
+            
+            // --- DIFFICULTY UPDATE ---
+            // Base time is 30s. We divide by multiplier.
+            // If Multiplier is 2 (Hard), delay is 15s.
+            float alienDelay = 30f / GameConfiguration.SpawnRateMultiplier;
+            nextAlienTime = Time.time + alienDelay; 
         }
     }
 
     void CalculateNextSpawnTime()
     {
-        // Get the current "Mean" (spawnRate) and add random noise
         float randomVariance = Random.Range(-spawnRateVariance, spawnRateVariance);
         
-        // Calculate the actual delay for this specific rock
-        float actualDelay = spawnRate + randomVariance;
+        // Calculate base delay
+        float baseDelay = spawnRate + randomVariance;
 
-        // Safety: Ensure we never go below a tiny limit (otherwise rocks stack instantly)
-        if (actualDelay < 0.2f) actualDelay = 0.2f;
+        // --- DIFFICULTY UPDATE ---
+        // Apply Spawn Rate Slider
+        // If Multiplier is 2.0 (High Intensity), we divide delay by 2.
+        float finalDelay = baseDelay / GameConfiguration.SpawnRateMultiplier;
 
-        nextSpawnTime = Time.time + actualDelay;
+        // Safety limit
+        if (finalDelay < 0.2f) finalDelay = 0.2f;
+
+        nextSpawnTime = Time.time + finalDelay;
     }
 
     void SpawnPlatform()
     {
-        // (Keep your existing SpawnPlatform code exactly the same)
         float randomX = Random.Range(minX, maxX);
         Vector2 spawnPos = new Vector2(randomX, spawnY);
         int randomIndex = Random.Range(0, platformPrefabs.Length);
-        GameObject newPlatform = Instantiate(platformPrefabs[randomIndex], spawnPos, Quaternion.identity);
-        float randomScale = Random.Range(minSize, maxSize);
-        newPlatform.transform.localScale = new Vector3(randomScale, randomScale, 1f);
+        
+        if (platformPrefabs.Length > 0)
+        {
+            GameObject newPlatform = Instantiate(platformPrefabs[randomIndex], spawnPos, Quaternion.identity);
+            float randomScale = Random.Range(minSize, maxSize);
+            newPlatform.transform.localScale = new Vector3(randomScale, randomScale, 1f);
+        }
     }
 
     void SpawnPowerup()
@@ -108,29 +124,21 @@ public class Spawner : MonoBehaviour
         {
             float randomX = Random.Range(minX, maxX);
             Vector2 spawnPos = new Vector2(randomX, spawnY);
-            
-            // Spawn it!
             Instantiate(powerupPrefab, spawnPos, Quaternion.identity);
         }
     }
+
     void SpawnAlien()
     {
         if (alienPrefab != null)
         {
-            // 1. Randomly decide: Left (-25) or Right (25)
             float spawnX;
-            // Random.value returns a number between 0.0 and 1.0
-            if (Random.value > 0.5f) 
-                spawnX = -25f; // Left Side
-            else 
-                spawnX = 25f;  // Right Side
+            if (Random.value > 0.5f) spawnX = -25f; 
+            else spawnX = 25f;  
 
-            // 2. Pick a random height (Upper half of screen)
             float spawnY = Random.Range(4f, 8f); 
-
             Vector2 spawnPos = new Vector2(spawnX, spawnY);
             
-            // 3. Spawn
             Instantiate(alienPrefab, spawnPos, Quaternion.identity);
         }
     }
