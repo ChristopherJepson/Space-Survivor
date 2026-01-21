@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Effects")]
+    public ParticleSystem thrustParticles;
+    public ParticleSystem exhaustParticles;
+
     // --- CONNECTIONS ---
     public Spawner spawnerScript; // Reference to the Spawner to pause it
     public TextMeshProUGUI livesText;
@@ -47,6 +51,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
         startPosition = transform.position;
         rb.gravityScale = 0;
         
@@ -154,6 +160,18 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                
+                // START EFFECTS
+                if (thrustParticles != null) thrustParticles.Play();
+                if (exhaustParticles != null) exhaustParticles.Play();
+            }
+
+            // STOP EFFECTS (When key is lifted)
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                // "Stop" allows existing particles to fade out naturally
+                if (thrustParticles != null) thrustParticles.Stop();
+                if (exhaustParticles != null) exhaustParticles.Stop();
             }
             if (Input.GetKeyDown(KeyCode.W) && currentAmmo > 0)
             {
@@ -344,5 +362,28 @@ public class PlayerController : MonoBehaviour
     public int GetScore()
     {
         return score;
+    }
+
+    System.Collections.IEnumerator FlashRoutine()
+    {
+        // Store original color
+        Color originalColor = spriteRenderer.color;
+        Color flashColor = new Color(1f, 1f, 1f, 0.8f); // Bright transparent white
+
+        // Blink 1
+        spriteRenderer.color = flashColor;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = originalColor;
+        yield return new WaitForSeconds(0.1f);
+
+        // Blink 2
+        spriteRenderer.color = flashColor;
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = originalColor;
+    }
+
+    public void ActivatePowerupVisuals()
+    {
+        StartCoroutine(FlashRoutine());
     }
 }
