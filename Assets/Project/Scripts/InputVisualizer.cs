@@ -1,38 +1,42 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Provides real-time visual feedback for player input on the UI.
+/// Highlights on-screen keys when the corresponding physical keys are pressed.
+/// </summary>
 public class InputVisualizer : MonoBehaviour
 {
-    [Header("Key Images")]
+    [Header("UI References")]
     public Image keyW;
     public Image keyA;
     public Image keyS;
     public Image keyD;
     public Image keySpace;
 
-    [Header("Colors")]
-    public Color normalColor = Color.white; // Default (Unpressed)
-    public Color pressedColor = new Color(0.5f, 0.5f, 0.5f, 1f); // Darker gray (Pressed)
+    [Header("Visual Settings")]
+    public Color normalColor = Color.white; 
+    public Color pressedColor = new Color(0.5f, 0.5f, 0.5f, 1f); 
 
+    /// <summary>
+    /// Polls input every frame and updates the color state of the UI elements.
+    /// </summary>
     void Update()
     {
-        // Update W
+        // Directional Inputs (WASD)
         if (Input.GetKey(KeyCode.W)) keyW.color = pressedColor;
         else keyW.color = normalColor;
 
-        // Update A
         if (Input.GetKey(KeyCode.A)) keyA.color = pressedColor;
         else keyA.color = normalColor;
 
-        // Update S
         if (Input.GetKey(KeyCode.S)) keyS.color = pressedColor;
         else keyS.color = normalColor;
 
-        // Update D
         if (Input.GetKey(KeyCode.D)) keyD.color = pressedColor;
         else keyD.color = normalColor;
 
-                // Update SPACEBAR
+        // Action Inputs
         if (Input.GetKey(KeyCode.Space)) keySpace.color = pressedColor;
         else keySpace.color = normalColor;
     }

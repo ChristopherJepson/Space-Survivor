@@ -1,10 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq; // Needed for sorting
+using System.Linq; 
 
+/// <summary>
+/// Manages the persistence and sorting of high score data.
+/// Uses PlayerPrefs and JSON serialization to store a list of top 10 scores.
+/// </summary>
 public class ScoreManager : MonoBehaviour
 {
-    // 1. DEFINE WHAT A "SCORE" IS
+    // --- Data Transfer Objects (DTOs) ---
+
     [System.Serializable]
     public class ScoreEntry
     {
@@ -12,54 +17,62 @@ public class ScoreManager : MonoBehaviour
         public int score;
     }
 
-    // 2. A WRAPPER CLASS (Needed for JSON saving)
     [System.Serializable]
     public class ScoreList
     {
         public List<ScoreEntry> list = new List<ScoreEntry>();
     }
 
-    // 3. ADD A NEW SCORE
+    // --- Public API ---
+
+    /// <summary>
+    /// Adds a new entry to the leaderboard, sorts the list descending, and keeps only the top 10.
+    /// Automatically saves changes to disk.
+    /// </summary>
+    /// <param name="name">Player initials.</param>
+    /// <param name="score">Final score value.</param>
     public static void AddScore(string name, int score)
     {
         ScoreList data = LoadScores();
 
-        // Add new entry
+        // Register new entry
         data.list.Add(new ScoreEntry { name = name, score = score });
 
-        // Sort: Highest to Lowest
+        // Sort by Score (Highest -> Lowest)
         data.list = data.list.OrderByDescending(x => x.score).ToList();
 
-        // Keep only Top 10
+        // Truncate list to maintain strictly top 10
         if (data.list.Count > 10)
         {
             data.list.RemoveRange(10, data.list.Count - 10);
         }
 
-        // Save back to disk
         SaveScores(data);
     }
 
-    // 4. CHECK IF A SCORE IS WORTHY
+    /// <summary>
+    /// Evaluates if a given score qualifies for the top 10.
+    /// </summary>
     public static bool IsHighScore(int score)
     {
         ScoreList data = LoadScores();
         
-        // If we have fewer than 10 scores, ANY score is a high score
+        // Always accepts scores if the board isn't full
         if (data.list.Count < 10) return true;
 
-        // Otherwise, beat the lowest score (the 10th one)
+        // Otherwise, must beat the lowest score on the board
         return score > data.list[data.list.Count - 1].score;
     }
 
-    // 5. LOAD / SAVE HELPERS
+    // --- Persistence Logic ---
+
     public static ScoreList LoadScores()
     {
         string json = PlayerPrefs.GetString("Leaderboard", "{}");
         ScoreList data = JsonUtility.FromJson<ScoreList>(json);
 
+        // Ensure data integrity if file is missing or corrupt
         if (data == null) data = new ScoreList();
-
         if (data.list == null) data.list = new List<ScoreEntry>();
         
         return data;

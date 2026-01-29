@@ -1,23 +1,31 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Required for loading scenes
+using UnityEngine.SceneManagement; 
 
+/// <summary>
+/// Handles Main Menu navigation and scene transitions.
+/// </summary>
 public class MenuController : MonoBehaviour
 {
-public void PlayGame()
+    /// <summary>
+    /// Cleans up menu-specific objects (Music, Background Spawner) and loads the core Game scene.
+    /// </summary>
+    public void PlayGame()
     {
-        // 1. Kill the Music
+        // Cleanup persistent menu music
         GameObject musicObj = GameObject.Find("MenuMusic");
         if (musicObj != null) Destroy(musicObj);
 
-        // 2. Kill the Background Spawner (NEW)
+        // Cleanup persistent background effects
         GameObject spawnerObj = GameObject.Find("BackgroundSpawner");
         if (spawnerObj != null) Destroy(spawnerObj);
 
-        // 3. Load the Game
+        // Transition to Gameplay
         SceneManager.LoadScene("Game");
     }
 
-    // Called by the Quit Button
+    /// <summary>
+    /// Terminates the application. Handles both Editor and Build environments.
+    /// </summary>
     public void QuitGame()
     {
         Debug.Log("Quitting Game...");
@@ -28,16 +36,19 @@ public void PlayGame()
         #endif
     }
 
-    // Called by the "Setup" button in the Main Menu
+    /// <summary>
+    /// Navigates to the Configuration/Setup scene.
+    /// </summary>
     public void OpenSetup()
     {
         SceneManager.LoadScene("Setup");
     }
 
-    // Called by the "Back" button in the Setup Scene
+    /// <summary>
+    /// Returns to the Main Menu scene.
+    /// </summary>
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
-
 }

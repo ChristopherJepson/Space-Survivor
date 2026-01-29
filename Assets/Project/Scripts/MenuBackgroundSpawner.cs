@@ -1,19 +1,26 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Needed to check scenes
+using UnityEngine.SceneManagement; 
 
+/// <summary>
+/// Manages the ambient background elements (asteroids/ships) in the Main Menu.
+/// Implements a Singleton pattern to persist across menu scenes but self-destructs during gameplay.
+/// </summary>
 public class MenuBackgroundSpawner : MonoBehaviour
 {
-    public static MenuBackgroundSpawner instance; // The "One True Spawner"
+    /// <summary>
+    /// Singleton instance reference.
+    /// </summary>
+    public static MenuBackgroundSpawner instance; 
 
-    [Header("Prefabs")]
+    [Header("Asset References")]
     public GameObject[] asteroidPrefabs;
     public GameObject enemyPrefab;
 
-    [Header("Time Settings")]
+    [Header("Spawn Settings")]
     public float enemySpawnRate = 5.0f;
     public float asteroidSpawnRate = 1.0f;
 
-    [Header("Spawn Positions")]
+    [Header("Spawn Boundaries")]
     public float asteroidY = 8.0f;
     public float asteroidXRange = 8.0f;
     public float enemyX = 10.0f;
@@ -23,80 +30,86 @@ public class MenuBackgroundSpawner : MonoBehaviour
     private float nextEnemyTime;
     private float nextAsteroidTime;
 
+    /// <summary>
+    /// Initializes the Singleton instance and marks object as persistent.
+    /// </summary>
     void Awake()
     {
-        // 1. SINGLETON PATTERN
+        // Enforce Singleton Pattern
         if (instance != null)
         {
-            // If a spawner already exists, destroy THIS new one immediately
             Destroy(gameObject);
             return;
         }
 
-        // 2. Claim the throne and survive loading
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
     void Update()
     {
-        // 3. SAFETY CHECK: Stop spawning if we are in the actual "Game"
-        // (Just in case we forgot to destroy it)
+        // Safety Check: Ensure this spawner does not exist in the main Game scene.
         if (SceneManager.GetActiveScene().name == "Game")
         {
             Destroy(gameObject);
             return;
         }
 
-        // Handle Asteroids
+        // Asteroid Spawning Logic
         if (Time.time > nextAsteroidTime)
         {
             SpawnAsteroid();
             nextAsteroidTime = Time.time + asteroidSpawnRate;
         }
 
-        // Handle Enemies
+        // Enemy Spawning Logic
         if (Time.time > nextEnemyTime)
         {
             SpawnEnemy();
             nextEnemyTime = Time.time + enemySpawnRate;
         }
     }
-
-    // ... (Keep your existing SpawnAsteroid and SpawnEnemy functions below) ...
-    // Paste them here or ensure they are still in the file!
     
-void SpawnAsteroid()
+    /// <summary>
+    /// Instantiates a random asteroid at a random X position above the screen.
+    /// </summary>
+    void SpawnAsteroid()
     {
         if (asteroidPrefabs.Length == 0) return;
+
         int index = Random.Range(0, asteroidPrefabs.Length);
         Vector3 spawnPos = new Vector3(Random.Range(-asteroidXRange, asteroidXRange), asteroidY, 0);
         
-        // CHANGE THIS LINE: Add ", transform" at the end
-        // This makes the rock a child of the Spawner
+        // Parent to this transform to keep the Hierarchy clean
         Instantiate(asteroidPrefabs[index], spawnPos, Quaternion.identity, transform);
     }
 
+    /// <summary>
+    /// Instantiates an enemy ship spawning from either the left or right side.
+    /// </summary>
     void SpawnEnemy()
     {
         if (enemyPrefab == null) return;
+
         int side = Random.Range(0, 2); 
         Vector3 spawnPos = Vector3.zero;
         Quaternion spawnRot = Quaternion.identity;
         float randomY = Random.Range(enemyYMin, enemyYMax);
 
+        // Determine side and orientation
         if (side == 0) 
         {
+            // Left side moving Right
             spawnPos = new Vector3(-enemyX, randomY, 0);
             spawnRot = Quaternion.Euler(0, 180, 0); 
         }
         else 
         {
+            // Right side moving Left
             spawnPos = new Vector3(enemyX, randomY, 0);
             spawnRot = Quaternion.identity;
         }
 
-        // CHANGE THIS LINE: Add ", transform" at the end
         Instantiate(enemyPrefab, spawnPos, spawnRot, transform);
     }
 }
