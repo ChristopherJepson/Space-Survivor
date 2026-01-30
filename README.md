@@ -56,9 +56,9 @@ This project was executed using an **AI-Augmented Workflow** to rapidly master t
 
 | Version | Status | Notes |
 | :--- | :--- | :--- |
-| **[v0.1.25](https://github.com/ChristopherJepson/Space-Survivor/releases)** | **Stable** | UI Overhaul, Scoreboard Persistence, Final Audio |
-| [v0.0.22](https://github.com/ChristopherJepson/Space-Survivor/releases) | Beta | Difficulty Ramping introduced |
-| [v0.0.09](https://github.com/ChristopherJepson/Space-Survivor/releases) | Alpha | Core Movement & Shooting mechanics |
+| **[v0.1.25](https://github.com/ChristopherJepson/Space-Survivor/releases/download/v0.1.25/Space-Survivor.0.1.25.zip)** | **Stable** | UI Overhaul, Scoreboard Persistence, Final Audio |
+| [v0.0.22](https://github.com/ChristopherJepson/Space-Survivor/releases/download/v0.0.22/Space-Survivor.0.0.22.zip) | Beta | Difficulty Ramping introduced |
+| [v0.0.09](https://github.com/ChristopherJepson/Space-Survivor/releases/download/v0.0.9/Space-Survivor.0.0.9.zip) | Alpha | Core Movement & Shooting mechanics |
 
 ---
 
