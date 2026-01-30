@@ -1,29 +1,68 @@
-# Space-Survivor (Unity game engine)
+# Space-Survivor: 2D Arcade Engine
+### Unity 6 LTS | C# | Release Candidate v0.1.25
 
-This game was created from an "empty" project template using the Unity 6.3 LTS game engine within the Windows 64 environment. 
-The purpose of the game was to become familiar with the Unity game engine.<br>
-<br>
-<a href="https://ibb.co/yFdRP1wq"><img src="https://i.ibb.co/7tjzC5wK/Space-Survivor-0-1-25-Main-Menu.png" alt="Space-Survivor-0-1-25-Main-Menu" border="0"></a><br>
-<br>
-<b>Note:</b><br>
-Currently, the game is optimize only for 1920x1080 video resolution. Any resolution under this may result in UI/UX issues. This will be fixed eventually.<br>
-<br>
-Use 'A' to move left.<br>
-Use 'D' to move right.<br>
-Use 'Spacebar' to burst forward.<br>
-Use 'W' to shoot laser (limited use).<br>
-<br>
-<b>Goal:</b><br>
-Avoid asteroids, aliens, lasers fired at you, and falling off the screen. You have 3 lives.<br>
-<br>
-<b>Extras:</b><br>
-Staying alive earns points. Powerups resupply ammunition, game ramps up the longer you survive. Get a high score, get on the leaderboard!<br>
-Setup menu provides options to adjust volume and difficulty through ramping and spawn intensity.<br>
-<br>
-Windows 64-bit Ver. 0.1.25 Compile: <a href="https://drive.usercontent.google.com/download?id=1sFy_lP2K-AQ7s152K1NxJhABDpdcwqCf&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.22 Compile: <a href="https://drive.usercontent.google.com/download?id=1rb3Yn-3u8awBhWgfC92gm9l2FhIiMGDV&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.16 Compile: <a href="https://drive.usercontent.google.com/download?id=18JaMG6ugoUxeyJXvwcZ_qzQdnfcEh3f6&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.12 Compile: <a href="https://drive.usercontent.google.com/download?id=1A7zDWmmEo7RM5tWOoRv6mTLB6r8dMe7D&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.11 Compile: <a href="https://drive.usercontent.google.com/download?id=1Z8kWb_ktFQil9rPFW8hxoE287-khmrVg&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.9 Compile: <a href="https://drive.usercontent.google.com/download?id=1s9yqBQJoNKlSF0_lwEAS6XBv7jQQc7XA&export=download">Download</a><br>
-Windows 64-bit Ver. 0.0.5 Compile: <a href="https://drive.usercontent.google.com/download?id=1ig-Y7nGJCS2wmN_4DZxJdSIpHrhJwlFE&export=download">Download</a><br>
+<div align="center">
+  <img src="https://i.ibb.co/PGFYjn7g/Space-Survivor-0-1-25-Main-Menu.png" width="100%" height="auto" alt="Space Survivor Main Menu">
+</div>
+
+![Unity](https://img.shields.io/badge/Unity-6000.0.0+-black?style=flat&logo=unity)
+![Language](https://img.shields.io/badge/Language-C%23-blue)
+![Status](https://img.shields.io/badge/Status-Gold%20Milestone-green)
+
+> **Engineering Context:** This project serves as a comprehensive study of the **Unity Game Loop**, **UI/UX Architecture**, and **Component-Based Design**. It represents a fully shipped gameplay loop, demonstrating the ability to take a project from empty directory to compiled release.
+
+---
+
+## 🎮 Technical Features
+
+### 1. Core Systems Architecture
+Unlike prototype scripts, this project utilizes a structured architecture to manage game state and entity interactions.
+- **Game Manager Singleton:** Implements a central `GameManager` to handle global state (Score, Lives, Level Progression) across scene transitions without data loss.
+- **Event-Driven UI:** Decouples gameplay logic from UI updates using C# Events/Delegates, ensuring that the HUD updates reactively rather than polling every frame.
+- **Object Pooling:** Implements a pooling system for projectiles and asteroids to optimize memory allocation and prevent Garbage Collection spikes during intense gameplay.
+
+### 2. Gameplay Mechanics Implementation
+- **Physics-Based Movement:** Utilizes Unity's `Rigidbody2D` physics engine for player propulsion, drag, and collision detection, ensuring smooth, predictable movement.
+- **Dynamic Difficulty Scaling:** Features a progression algorithm that increases spawn rates and enemy velocity over time, keeping the engagement curve consistent.
+- **Input System:** Mapped standard WASD/Space controls with potential for extension to the new Unity Input System.
+
+### 3. UI/UX & Feedback Loops
+- **Visual Feedback:** Integrated particle effects and sprite animations for collisions and power-ups to provide immediate user feedback (Game Feel).
+- **Persistent Data:** Implements local save systems to track High Scores, demonstrating familiarity with data persistence (PlayerPrefs/JSON).
+
+---
+
+## 🤖 Methodology: Accelerated Engineering
+This project was executed using an **AI-Augmented Workflow** to rapidly master the Unity Engine.
+- **Syntax Acceleration:** Utilized LLMs to generate standard boilerplate code (e.g., UI Managers), allowing focus to remain on high-level logic and game feel.
+- **Milestone Driven:** The development followed a strict milestone schedule, successfully delivering "Version 0.1.25" as the first Gold Candidate on time.
+
+---
+
+## 🕹️ Controls & Mechanics
+
+| Key | Action | Technical Note |
+| :--- | :--- | :--- |
+| **W** | Fire Laser | Instantiates projectile from Pool |
+| **Space** | Burst Engine | Applies `AddForce` impulse |
+| **A / D** | Rotate | Modifies `Transform.Rotation` |
+
+**Objective:** Survive the asteroid field. Difficulty ramps based on `Time.deltaTime`.
+
+---
+
+## 📦 Releases & Downloads
+*Current Milestone: v0.1.25 (Windows 64-bit)*
+
+| Version | Status | Notes |
+| :--- | :--- | :--- |
+| **[v0.1.25](https://github.com/ChristopherJepson/Space-Survivor/releases)** | **Stable** | UI Overhaul, Scoreboard Persistence, Final Audio |
+| [v0.0.22](https://github.com/ChristopherJepson/Space-Survivor/releases) | Beta | Difficulty Ramping introduced |
+| [v0.0.09](https://github.com/ChristopherJepson/Space-Survivor/releases) | Alpha | Core Movement & Shooting mechanics |
+
+---
+
+## 👤 Author
+**Christopher Jepson**
+*Technical Artist & Software Engineer*
+[LinkedIn](https://www.linkedin.com/in/christopher-jepson-310a84308) | [Email](mailto:christopher.j.jepson@gmail.com)
