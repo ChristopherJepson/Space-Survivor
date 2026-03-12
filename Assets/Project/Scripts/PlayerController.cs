@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private float scoreTimerSmall = 0f; 
     private float scoreTimerLarge = 0f; 
 
+
     /// <summary>
     /// Initializes components and starts the game introduction sequence.
     /// </summary>

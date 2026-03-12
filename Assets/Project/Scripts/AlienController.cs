@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 /// <summary>
 /// Controls the behavior of the Alien Enemy, including movement, facing direction, 
 /// combat logic, and collision handling.
