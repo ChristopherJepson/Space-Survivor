@@ -12,7 +12,6 @@ found_errors = False
 print("Starting custom DevSecOps C# scan...")
 
 for root, dirs, files in os.walk(directory):
-    # This line forces os.walk to skip our excluded directories
     dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
     
     for file in files:
@@ -21,8 +20,14 @@ for root, dirs, files in os.walk(directory):
             with open(filepath, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 for line_num, line in enumerate(lines, 1):
+                    
+                    # --- THE FIX ---
+                    # Split the line at '//' and only scan the first part (the code)
+                    # This completely ignores your documentation comments.
+                    code_only = line.split('//')[0]
+                    
                     for banned in BANNED_FUNCTIONS:
-                        if banned in line:
+                        if banned in code_only:
                             print(f"::error file={filepath},line={line_num}::Deprecated function '{banned}' is not allowed. Please use FindFirstObjectByType.")
                             found_errors = True
 
