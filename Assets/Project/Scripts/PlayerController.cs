@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
         startPosition = transform.position;
         rb.gravityScale = 0; // Float until game starts
         
+        
         // Safety check for dependencies
         if (spawnerScript == null) spawnerScript = FindObjectOfType<Spawner>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
