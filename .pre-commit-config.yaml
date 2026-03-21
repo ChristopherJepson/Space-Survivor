@@ -1,0 +1,9 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: unity-devsecops-scanner
+        name: DevSecOps Local C# Scanner
+        entry: py custom_linter.py
+        language: system
+        pass_filenames: false
+        stages: [push]
