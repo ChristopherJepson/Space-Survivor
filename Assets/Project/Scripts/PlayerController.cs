@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour
     private float scoreTimerSmall = 0f; 
     private float scoreTimerLarge = 0f; 
 
-
     /// <summary>
     /// Initializes components and starts the game introduction sequence.
     /// </summary>
@@ -69,10 +68,8 @@ public class PlayerController : MonoBehaviour
         startPosition = transform.position;
         rb.gravityScale = 0; // Float until game starts
         
-    
-    
-        // Safety check for dependencies
-        if (spawnerScript == null) spawnerScript = FindObjectOfType<Spawner>();
+        // PIPELINE FIX: Replaced deprecated FindObjectOfType for dependency injection fallback
+        if (spawnerScript == null) spawnerScript = FindFirstObjectByType<Spawner>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Initialize UI

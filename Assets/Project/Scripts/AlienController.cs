@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-
 /// <summary>
 /// Controls the behavior of the Alien Enemy, including movement, facing direction, 
 /// combat logic, and collision handling.
@@ -10,7 +9,7 @@ public class AlienController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float speed = 3f;
-    private int direction = 1; // 1 = Right, -1 = Left
+    private int direction = 1; 
 
     [Header("Combat Settings")]
     public GameObject enemyLaserPrefab;
@@ -52,15 +51,13 @@ public class AlienController : MonoBehaviour
     {
         if (transform.position.x < 0)
         {
-            // Spawned Left -> Move Right
             direction = 1;
-            if (spriteRenderer != null) spriteRenderer.flipX = true; // Flip to face Right
+            if (spriteRenderer != null) spriteRenderer.flipX = true; 
         }
         else
         {
-            // Spawned Right -> Move Left
             direction = -1;
-            if (spriteRenderer != null) spriteRenderer.flipX = false; // Default face Left
+            if (spriteRenderer != null) spriteRenderer.flipX = false; 
         }
     }
 
@@ -87,8 +84,8 @@ public class AlienController : MonoBehaviour
     {
         if (other.CompareTag("Laser"))
         {
-            // Reward Score
-            PlayerController player = FindObjectOfType<PlayerController>();
+            // PIPELINE FIX: Replaced deprecated FindObjectOfType
+            PlayerController player = FindFirstObjectByType<PlayerController>();
             if (player != null)
             {
                 player.AddScore(200);
