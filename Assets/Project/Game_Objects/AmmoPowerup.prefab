@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8874990695115202534}
   - component: {fileID: 4090982560139313836}
   - component: {fileID: 9157228028140974843}
+  - component: {fileID: -4961905678892085095}
   m_Layer: 0
   m_Name: AmmoPowerup
   m_TagString: Powerup
@@ -162,3 +163,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AmmoPickup
   scoreReward: 50
   floatingTextPrefab: {fileID: 6210808496269388351, guid: 41ee28af346c69f418fadf299b4196cd, type: 3}
+--- !u!50 &-4961905678892085095
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5151436869378746530}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

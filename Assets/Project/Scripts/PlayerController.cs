@@ -9,10 +9,19 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
+
+    [Header("Physics Settings")]
+    public float turnThrust = 20f;
+    public float maxSpeedX = 10f; // Prevents infinite horizontal acceleration
+
     [Header("VFX & Feedback")]
     public ParticleSystem thrustParticles;
     public ParticleSystem exhaustParticles;
     public float tiltAngle = 40f;
+
+    [Tooltip("Multiplier for the main engine (Spacebar) compared to turn thrust.")]
+    [Range(1f, 10f)] // <-- THIS CREATES THE UNITY INSPECTOR SLIDER
+    public float mainEngineThrustMultiplier = 3f;
 
     [Header("Scene Dependencies")]
     public Spawner spawnerScript; 
@@ -41,6 +50,27 @@ public class PlayerController : MonoBehaviour
     public float xBoundary = 20f;
     public int lives = 3;
     
+    [Header("Super Cruise State")]
+    public bool isSuperCruiseActive = false;
+    private bool cruiseBroken10s = true; // Starts true so you can't get free points on the very first interval
+    private bool cruiseBroken60s = true;
+
+    [Header("Super Cruise Audio")]
+    public AudioClip cruiseStartSound;
+    [Range(0f, 1f)]
+    public float cruiseStartVolume = 1.0f;
+    
+    public AudioClip cruiseLoopSound;
+    [Range(0f, 1f)]
+    public float cruiseLoopVolume = 0.5f;
+
+    public AudioClip cruiseEndSound;
+    [Range(0f, 1f)]
+    public float cruiseEndVolume = 1.0f;
+
+    // This will hold the dedicated audio source we generate in the code
+    private AudioSource cruiseLoopSource;
+
     // Internal State
     private int currentAmmo = 5;
     private bool isGameActive = false;
@@ -64,6 +94,12 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerAudio = GetComponent<AudioSource>();
+
+        // AUDIO FIX: Dynamically build a dedicated audio source for the engine loop
+        cruiseLoopSource = gameObject.AddComponent<AudioSource>();
+        cruiseLoopSource.loop = true;          // Crucial: Make it loop continuously
+        cruiseLoopSource.playOnAwake = false;  // Don't play until we press S
+        cruiseLoopSource.volume = cruiseLoopVolume;
 
         startPosition = transform.position;
         rb.gravityScale = 0; // Float until game starts
@@ -123,6 +159,7 @@ public class PlayerController : MonoBehaviour
         // Active Gameplay Loop
         if (isGameActive)
         {
+            HandleSuperCruiseInput();
             HandleGameTimer();
             HandleScoring();
             HandleMovement();
@@ -136,30 +173,94 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleSuperCruiseInput()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            isSuperCruiseActive = true;
+            GameConfiguration.SetSuperCruise(true); 
+
+            // FIX: Use cruiseStartVolume
+            if (cruiseStartSound != null)
+            {
+                AudioSource.PlayClipAtPoint(cruiseStartSound, Camera.main.transform.position, cruiseStartVolume);
+            }
+
+            if (cruiseLoopSound != null)
+            {
+                cruiseLoopSource.clip = cruiseLoopSound;
+                
+                // Ensure the loop volume is up-to-date in case you tweaked it in the Inspector while playing
+                cruiseLoopSource.volume = cruiseLoopVolume; 
+                cruiseLoopSource.Play();
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.S))
+        {
+            isSuperCruiseActive = false;
+            GameConfiguration.SetSuperCruise(false); 
+            cruiseBroken10s = true; 
+            cruiseBroken60s = true; 
+
+            if (cruiseLoopSource != null)
+            {
+                cruiseLoopSource.Stop();
+            }
+
+            // FIX: Use cruiseEndVolume
+            if (cruiseEndSound != null)
+            {
+                AudioSource.PlayClipAtPoint(cruiseEndSound, Camera.main.transform.position, cruiseEndVolume);
+            }
+        }
+    }
+
     private void HandleGameTimer()
     {
-        gameTimer += Time.deltaTime;
+        float timeDelta = isSuperCruiseActive ? Time.deltaTime * 2f : Time.deltaTime;
+        gameTimer += timeDelta;
         UpdateTimerUI();
     }
 
     private void HandleScoring()
     {
-        scoreTimerSmall += Time.deltaTime;
-        scoreTimerLarge += Time.deltaTime;
+        // Timers also run twice as fast during Super Cruise
+        float timeDelta = isSuperCruiseActive ? Time.deltaTime * 2f : Time.deltaTime;
+        scoreTimerSmall += timeDelta;
+        scoreTimerLarge += timeDelta;
 
-        // Award points every 10 seconds
+        // 10-Second Interval Check
         if (scoreTimerSmall >= 10f)
         {
-            score += 10;
+            int points = 10;
+            
+            // HACK CHECK VALIDATION
+            if (isSuperCruiseActive && !cruiseBroken10s)
+            {
+                points *= 2; 
+            }
+            
+            score += points; // Add directly to bypass AddScore multiplier
             scoreTimerSmall -= 10f; 
+            
+            // Reset tripwire for the next 10s loop
+            cruiseBroken10s = !isSuperCruiseActive; 
             UpdateScoreUI();
         }
 
-        // Award bonus points every 60 seconds
+        // 60-Second Interval Check
         if (scoreTimerLarge >= 60f)
         {
-            score += 100;
+            int points = 100;
+            
+            if (isSuperCruiseActive && !cruiseBroken60s)
+            {
+                points *= 2;
+            }
+            
+            score += points;
             scoreTimerLarge -= 60f;
+            cruiseBroken60s = !isSuperCruiseActive; 
             UpdateScoreUI();
         }
     }
@@ -167,22 +268,37 @@ public class PlayerController : MonoBehaviour
     private void HandleMovement()
     {
         float moveInput = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        
+        // 1. HORIZONTAL PHYSICS (Turn Thrust)
+        rb.AddForce(new Vector2(moveInput * turnThrust, 0f));
 
-        // Calculate Banking/Tilt Rotation
+        // Clamp horizontal velocity so the ship doesn't accelerate infinitely
+        if (Mathf.Abs(rb.linearVelocity.x) > maxSpeedX)
+        {
+            rb.linearVelocity = new Vector2(Mathf.Sign(rb.linearVelocity.x) * maxSpeedX, rb.linearVelocity.y);
+        }
+
+        // Calculate Banking/Tilt Rotation (Visual only)
         float targetZ = -moveInput * tiltAngle; 
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetZ);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
 
-        // Clamp Position
+        // Clamp Position to screen bounds
         Vector3 currentPos = transform.position;
         currentPos.x = Mathf.Clamp(currentPos.x, -xBoundary, xBoundary);
         transform.position = currentPos;
 
-        // Thrust Input
+        // 2. VERTICAL PHYSICS (Main Engine Thrust - 3x Power)
+        // Changed to GetKey so the force applies continuously while held down
+        if (Input.GetKey(KeyCode.Space))
+        {
+            // Now uses the slider value from the Unity Inspector
+            rb.AddForce(Vector2.up * (turnThrust * mainEngineThrustMultiplier));
+        }
+
+        // 3. VISUAL EFFECTS (Particles)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             if (thrustParticles != null) thrustParticles.Play();
             if (exhaustParticles != null) exhaustParticles.Play();
         }
@@ -247,6 +363,7 @@ public class PlayerController : MonoBehaviour
     {
         // Pause State
         isGameActive = false; 
+        CancelSuperCruise();
         isInvulnerable = true; 
         rb.linearVelocity = Vector2.zero; 
         rb.gravityScale = 0; 
@@ -290,6 +407,8 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("GAME OVER");
         isGameOver = true;
+
+        CancelSuperCruise();
 
         if (highScoreScript != null && ScoreManager.IsHighScore(score))
         {
@@ -352,8 +471,17 @@ public class PlayerController : MonoBehaviour
         UpdateAmmoUI();
     }
     
+    /// <summary>
+    /// Adds score to the player. Automatically doubles the input if Super Cruise is active.
+    /// This handles Aliens (200 -> 400) and Powerups (50 -> 100).
+    /// </summary>
     public void AddScore(int amount)
     {
+        if (isSuperCruiseActive)
+        {
+            amount *= 2;
+        }
+        
         score += amount;
         UpdateScoreUI();
     }
@@ -390,6 +518,31 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             spriteRenderer.color = originalColor;
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    /// <summary>
+    /// Forcibly resets the Super Cruise state. Used when taking damage or game over
+    /// to prevent input locks if the player releases the key while the game loop is paused.
+    /// </summary>
+    private void CancelSuperCruise()
+    {
+        if (isSuperCruiseActive)
+        {
+            isSuperCruiseActive = false;
+            
+            // Broadcast the slowdown to all active asteroids immediately
+            GameConfiguration.SetSuperCruise(false); 
+            
+            // Snap the tripwires so they don't get free points upon respawn
+            cruiseBroken10s = true; 
+            cruiseBroken60s = true; 
+
+            // AUDIO FIX: Hard-stop the looping engine if the player is destroyed
+            if (cruiseLoopSource != null && cruiseLoopSource.isPlaying)
+            {
+                cruiseLoopSource.Stop();
+            }
         }
     }
 }

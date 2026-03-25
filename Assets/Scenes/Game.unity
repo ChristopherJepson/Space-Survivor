@@ -517,12 +517,12 @@ MonoBehaviour:
   - {fileID: 6789306899406636147, guid: 24c107c6332664048ab563573a5c40d3, type: 3}
   - {fileID: 840107241323538387, guid: a17d2401c3a27d44dacb534ce8c7f77b, type: 3}
   powerupPrefab: {fileID: 5151436869378746530, guid: 88cb772aabbbd4243aa01ed00c2e234e, type: 3}
-  spawnRate: 2
+  alienPrefab: {fileID: 2272509378671722450, guid: 20f4b16ec94a85448986c8d3e1afee45, type: 3}
   isSpawningActive: 0
+  spawnRate: 2
   spawnRateVariance: 0.8
   spawnRateDecrease: 0.02
   minSpawnRate: 0.5
-  alienPrefab: {fileID: 2272509378671722450, guid: 20f4b16ec94a85448986c8d3e1afee45, type: 3}
   spawnY: 15
   minX: -19
   maxX: 19
@@ -17633,6 +17633,7 @@ GameObject:
   - component: {fileID: 1754831542}
   - component: {fileID: 1754831543}
   - component: {fileID: 1754831544}
+  - component: {fileID: 1754831545}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -17653,7 +17654,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 2.5
   m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -17754,29 +17755,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 184935d479f29a340b95cc4432ee4440, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  turnThrust: 20
+  maxSpeedX: 10
   thrustParticles: {fileID: 1722941771}
   exhaustParticles: {fileID: 1664112268}
+  tiltAngle: 40
+  mainEngineThrustMultiplier: 2.5
   spawnerScript: {fileID: 180638362}
+  gameOverUI: {fileID: 2133483440}
+  projectilePrefab: {fileID: 2046706255990340770, guid: 025b394c4dc7e4c4aa32d91f6cd8bca7, type: 3}
+  projectileOffset: {x: 0, y: 1, z: 0}
+  highScoreScript: {fileID: 1321336865}
   livesText: {fileID: 1060967521}
   timerText: {fileID: 1175607653}
   scoreText: {fileID: 103970137}
-  gameOverUI: {fileID: 2133483440}
-  rb: {fileID: 1754831538}
-  spriteRenderer: {fileID: 1754831539}
-  projectilePrefab: {fileID: 2046706255990340770, guid: 025b394c4dc7e4c4aa32d91f6cd8bca7, type: 3}
-  projectileOffset: {x: 0, y: 1, z: 0}
   ammoText: {fileID: 833215532}
   backgroundMusic: {fileID: 1789490052}
   gameOverSound: {fileID: 8300000, guid: 2507586e786fb6640b2584f5fcfcb8e2, type: 3}
   readySound: {fileID: 8300000, guid: adda5650ac83f274f80e5713db5c37f2, type: 3}
   beginSound: {fileID: 8300000, guid: 4b124cab8dea7374182c4ef1b77483b2, type: 3}
-  tiltAngle: 40
-  highScoreScript: {fileID: 1321336865}
   moveSpeed: 5
   jumpForce: 10
   bottomBoundary: -11
   xBoundary: 20
   lives: 3
+  isSuperCruiseActive: 0
+  cruiseStartSound: {fileID: 0}
+  cruiseStartVolume: 1
+  cruiseLoopSound: {fileID: 8300000, guid: 69ccf7b90341e9b4a9633a623ae018d0, type: 3}
+  cruiseLoopVolume: 0.8
+  cruiseEndSound: {fileID: 8300000, guid: 33ab9ab6e5b1ea24fbd94eb50e1cc927, type: 3}
+  cruiseEndVolume: 1
 --- !u!60 &1754831543
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -18196,6 +18205,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1754831545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754831536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc5b6bc3143cc2459b569bdb74c0e89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GravityEffector
+  gravitationalConstant: 0.5
+  gravityReceptivity: 17
+  isGravityActive: 1
 --- !u!1 &1787102864
 GameObject:
   m_ObjectHideFlags: 0

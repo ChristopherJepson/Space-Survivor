@@ -1,18 +1,26 @@
+using System; // NEW: Required for C# Events
+
 /// <summary>
 /// A static container for global game settings.
-/// Persists data between scenes (e.g., from the Setup Menu to the Game Scene).
 /// </summary>
 public static class GameConfiguration
 {
-    /// <summary>
-    /// Multiplier for how quickly the game difficulty increases over time.
-    /// Range: 0.5 (Slow Ramping) to 2.0 (Fast Ramping). Default is 1.0.
-    /// </summary>
     public static float RampingSpeed = 1.0f; 
+    public static float SpawnRateMultiplier = 1.0f;
+    public static float PlayerThrustMultiplier = 3.0f;
+    public static float SuperCruiseRampMultiplier = 1.0f; 
+
+    // NEW: The broadcast channel that asteroids will listen to
+    public static event Action<bool> OnSuperCruiseToggled;
 
     /// <summary>
-    /// Multiplier for the frequency of enemy and obstacle spawns.
-    /// Range: 0.5 (Low Density) to 2.0 (High Density). Default is 1.0.
+    /// Updates the multiplier and broadcasts the state change to all active objects in the scene.
     /// </summary>
-    public static float SpawnRateMultiplier = 1.0f;
+    public static void SetSuperCruise(bool isActive)
+    {
+        SuperCruiseRampMultiplier = isActive ? 2.0f : 1.0f;
+        
+        // The '?' safely checks if anything is actually listening before broadcasting
+        OnSuperCruiseToggled?.Invoke(isActive); 
+    }
 }

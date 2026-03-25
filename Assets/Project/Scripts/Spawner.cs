@@ -67,13 +67,16 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private void HandleDifficultyRamp()
     {
+        // Combine base UI ramping with active Super Cruise multiplier
+        float currentRamp = GameConfiguration.RampingSpeed * GameConfiguration.SuperCruiseRampMultiplier;
+
         // Increase falling speed
-        globalSpeed += (speedIncrease * GameConfiguration.RampingSpeed) * Time.deltaTime;
+        globalSpeed += (speedIncrease * currentRamp) * Time.deltaTime;
 
         // Decrease interval between spawns (Higher Density)
         if (spawnRate > minSpawnRate)
         {
-            spawnRate -= (spawnRateDecrease * GameConfiguration.RampingSpeed) * Time.deltaTime;
+            spawnRate -= (spawnRateDecrease * currentRamp) * Time.deltaTime;
         }
     }
 

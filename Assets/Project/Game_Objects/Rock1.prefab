@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7749721559546801225}
   - component: {fileID: 7426546194603363652}
   - component: {fileID: 3233841005581028367}
+  - component: {fileID: -858365701402951537}
+  - component: {fileID: 2765928736591733107}
   m_Layer: 0
   m_Name: Rock1
   m_TagString: Enemy
@@ -107,7 +109,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MoveDown
   destroyHeight: -10
   speedVariance: 2
+  useGlobalSpeed: 1
+  fixedSpeed: 3
+  maxRotationSpeed: 200
   fragmentPrefab: {fileID: 6857829962148448994, guid: 0c3a835f93297fd47a1ebaa2757c8c6a, type: 3}
+  explosionVFX: {fileID: 3974404179323851457, guid: ac85d8c00a6092745a94595e04de552e, type: 3}
+  explosionSound: {fileID: 8300000, guid: ef23ae5362c97104592169ea5c42a032, type: 3}
+  explosionVolume: 0.8
+  initializedAsFragment: 0
 --- !u!60 &3233841005581028367
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -566,3 +575,45 @@ PolygonCollider2D:
       - {x: 0.28375, y: 1.128125}
       - {x: 0.26, y: 1.128125}
   m_UseDelaunayMesh: 1
+--- !u!50 &-858365701402951537
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013179376463336935}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &2765928736591733107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013179376463336935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cc5b6bc3143cc2459b569bdb74c0e89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GravityEffector
+  gravitationalConstant: 0.5
+  gravityReceptivity: 1
+  isGravityActive: 1
